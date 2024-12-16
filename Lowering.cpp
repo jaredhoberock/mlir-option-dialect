@@ -61,13 +61,13 @@ struct NoneOpLowering : public OpConversionPattern<NoneOp> {
       return rewriter.notifyMatchFailure(op, "type conversion failed");
 
     // Extract element types
-    auto flagTy = structTy.getBody()[0];  // i1
-    auto valueTy = structTy.getBody()[1]; // T
+    auto flagTy = structTy.getBody()[0];
+    auto valueTy = structTy.getBody()[1];
 
     Location loc = op.getLoc();
 
-    // Create the constant presence flag (false)
-    Value flagVal = rewriter.create<LLVM::ConstantOp>(loc, flagTy, rewriter.getBoolAttr(false));
+    // Create the constant presence flag with value 0
+    Value flagVal = rewriter.create<LLVM::ConstantOp>(loc, flagTy, 0);
 
     // Create the undefined value
     Value valueVal = rewriter.create<LLVM::UndefOp>(loc, valueTy);
@@ -99,8 +99,8 @@ struct SomeOpLowering : public OpConversionPattern<SomeOp> {
 
     Location loc = op.getLoc();
 
-    // Create the constant presence flag (true)
-    Value flagVal = rewriter.create<LLVM::ConstantOp>(loc, flagTy, rewriter.getBoolAttr(true));
+    // Create the constant presence flag with value 1
+    Value flagVal = rewriter.create<LLVM::ConstantOp>(loc, flagTy, 1);
 
     // Create the value
     assert(adaptor.getOperands().size() == 1);
