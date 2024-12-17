@@ -41,8 +41,18 @@ struct IsSomeOpLowering : public OpConversionPattern<IsSomeOp> {
     auto structTy = cast<LLVM::LLVMStructType>(adaptor.getInput().getType());
 
     // extract the first field of the struct, which is the "presence flag"
-    rewriter.replaceOpWithNewOp<LLVM::ExtractValueOp>(
-      op, structTy.getBody()[0], adaptor.getInput(), 0
+    auto flagVal = rewriter.create<LLVM::ExtractValueOp>(
+      op.getLoc(),
+      structTy.getBody()[0],
+      adaptor.getInput(),
+      0
+    );
+
+    // truncate the flag to i1
+    rewriter.replaceOpWithNewOp<LLVM::TruncOp>(
+      op,
+      rewriter.getI1Type(),
+      flagVal
     );
 
     return success();
@@ -132,16 +142,23 @@ struct AndThenOpLowering : public OpConversionPattern<AndThenOp> {
     // Extract the presence flag from input
     Value inputFlag = rewriter.create<LLVM::ExtractValueOp>(
       loc,
-      rewriter.getI1Type(),
+      inputStructTy.getBody()[0],
       adaptor.getInput(),
       0
+    );
+
+    // truncate the presence flag to use as the if condition
+    Value cond = rewriter.create<LLVM::TruncOp>(
+      loc,
+      rewriter.getI1Type(),
+      inputFlag
     );
 
     // Create an scf.if operation
     auto ifOp = rewriter.create<scf::IfOp>(
       loc,
       resultOptionTy,
-      inputFlag,
+      cond,
       /*withElseRegion=*/true
     );
 
@@ -207,21 +224,33 @@ struct UnwrapOrOpLowering : public OpConversionPattern<UnwrapOrOp> {
   LogicalResult matchAndRewrite(UnwrapOrOp oldOp, OpAdaptor adaptor,
                                 ConversionPatternRewriter& rewriter) const override {
     Location loc = oldOp.getLoc();
+
+    // convert the input option and result types
     Type resultTy = getTypeConverter()->convertType(oldOp.getType());
+    auto structTy = dyn_cast_or_null<LLVM::LLVMStructType>(getTypeConverter()->convertType(oldOp.getOption().getType()));
+    if (not resultTy or not structTy)
+      return rewriter.notifyMatchFailure(oldOp, "type conversion failed");
 
     // Extract the presence flag from input option
     Value flagVal = rewriter.create<LLVM::ExtractValueOp>(
       loc,
-      rewriter.getI1Type(),
+      structTy.getBody()[0],
       adaptor.getOption(),
       0
+    );
+
+    // Truncate the flag to use as a condition for the if
+    Value cond = rewriter.create<LLVM::TruncOp>(
+      loc,
+      rewriter.getI1Type(),
+      flagVal
     );
 
     // create if-else structure
     auto ifOp = rewriter.create<scf::IfOp>(
       loc,
       resultTy,
-      flagVal,
+      cond,
       /*withElseRegion=*/true
     );
 
@@ -267,8 +296,9 @@ void populateOptionToLLVMConversionPatterns(LLVMTypeConverter& typeConverter, Re
     if (not innerTy)
       return Type();
 
-    auto flagTy = IntegerType::get(&typeConverter.getContext(), 1);
-    return LLVM::LLVMStructType::getLiteral(&typeConverter.getContext(), {flagTy, innerTy});
+    auto presenceFlagWidth = 8;
+    auto presenceFlagTy = IntegerType::get(&typeConverter.getContext(), presenceFlagWidth);
+    return LLVM::LLVMStructType::getLiteral(&typeConverter.getContext(), {presenceFlagTy, innerTy});
   });
 
   patterns.add<
