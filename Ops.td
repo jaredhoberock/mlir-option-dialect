@@ -124,6 +124,14 @@ def IsSomeOp : OptionOp<"is_some", [
 
   let assemblyFormat = "$input attr-dict `:` qualified(type($input))";
   let hasFolder = 1;
+
+  let extraClassDeclaration = [{
+    // build an is_some op with the result type inferred
+    static void build(::mlir::OpBuilder& builder, ::mlir::OperationState& result,
+                      ::mlir::Value option) {
+      build(builder, result, builder.getI1Type(), option);
+    }
+  }];
 }
 
 def YieldOp : OptionOp<"yield", [
