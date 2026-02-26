@@ -10,7 +10,7 @@
 #include "OptionOps.cpp.inc"
 
 using namespace mlir;
-using namespace option;
+using namespace mlir::option;
 
 // AndThenOp
 

@@ -6,7 +6,7 @@ include "mlir/IR/OpBase.td"
 def OptionDialect : Dialect {
   let name = "option";
   let summary = "A dialect for monadic option<T> types";
-  let cppNamespace = "::option";
+  let cppNamespace = "::mlir::option";
   
   let useDefaultTypePrinterParser = 1;
 

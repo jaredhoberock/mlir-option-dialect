@@ -12,7 +12,7 @@
 using namespace mlir;
 
 
-namespace option {
+namespace mlir::option {
 
 
 static Value createLLVMStructFromValues(OpBuilder& rewriter, Location loc, Type structTy, ArrayRef<Value> values) {
@@ -313,4 +313,4 @@ void populateOptionToLLVMConversionPatterns(LLVMTypeConverter& typeConverter, Re
 }
 
 
-} // end option
+} // end mlir::option

@@ -4,7 +4,7 @@
 #include <mlir/IR/PatternMatch.h>
 
 using namespace mlir;
-using namespace option;
+using namespace mlir::option;
 
 struct FoldIdentityAndThen : public OpRewritePattern<AndThenOp> {
   using OpRewritePattern::OpRewritePattern;

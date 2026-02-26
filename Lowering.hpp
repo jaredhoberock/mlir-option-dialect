@@ -7,8 +7,8 @@ class RewritePatternSet;
 
 }
 
-namespace option {
+namespace mlir::option {
 
-void populateOptionToLLVMConversionPatterns(mlir::LLVMTypeConverter& typeConverter,
-                                            mlir::RewritePatternSet& patterns);
+void populateOptionToLLVMConversionPatterns(LLVMTypeConverter& typeConverter,
+                                            RewritePatternSet& patterns);
 }

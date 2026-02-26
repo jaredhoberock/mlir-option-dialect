@@ -9,7 +9,7 @@ extern "C" {
 
 void optionRegisterDialect(MlirContext context) {
   mlir::MLIRContext *ctx = unwrap(context);
-  ctx->loadDialect<option::OptionDialect>();
+  ctx->loadDialect<mlir::option::OptionDialect>();
 }
 
 } // end extern "C"

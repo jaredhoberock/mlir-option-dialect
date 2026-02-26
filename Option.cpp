@@ -11,7 +11,7 @@
 #include <mlir/IR/OpImplementation.h>
 
 using namespace mlir;
-using namespace option;
+using namespace mlir::option;
 
 #include "Option.cpp.inc"
 

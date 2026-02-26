@@ -5,7 +5,7 @@
 #include <mlir/IR/DialectImplementation.h>
 
 using namespace mlir;
-using namespace option;
+using namespace mlir::option;
 
 #define GET_TYPEDEF_CLASSES
 #include "OptionTypes.cpp.inc"

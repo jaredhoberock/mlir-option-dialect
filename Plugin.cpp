@@ -2,7 +2,7 @@
 #include <mlir/Tools/Plugins/DialectPlugin.h>
 
 static void registerPlugin(mlir::DialectRegistry* registry) {
-  registry->insert<option::OptionDialect>();
+  registry->insert<mlir::option::OptionDialect>();
 }
 
 extern "C" ::mlir::DialectPluginLibraryInfo LLVM_ATTRIBUTE_WEAK
