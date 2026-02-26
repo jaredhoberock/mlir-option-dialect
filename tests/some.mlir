@@ -1,4 +1,4 @@
-// RUN: opt %s | FileCheck %s
+// RUN: mlir-opt %s | FileCheck %s
 
 // CHECK-LABEL: func @test_some
 // CHECK: %{{.+}} = option.some %arg0

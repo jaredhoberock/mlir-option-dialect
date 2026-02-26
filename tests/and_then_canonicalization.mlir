@@ -1,4 +1,4 @@
-// RUN: opt %s -canonicalize -split-input-file | FileCheck %s
+// RUN: mlir-opt %s --canonicalize --split-input-file | FileCheck %s
 
 // CHECK-LABEL: func @test_and_then_identity_fold
 func.func @test_and_then_identity_fold() -> !option.option<i32> {

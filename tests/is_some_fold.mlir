@@ -1,4 +1,4 @@
-// RUN: opt %s -canonicalize -split-input-file | FileCheck %s
+// RUN: mlir-opt %s --canonicalize --split-input-file | FileCheck %s
 
 // CHECK-LABEL: func @test_is_some_some_fold
 func.func @test_is_some_some_fold(%val: i32) -> i1 {

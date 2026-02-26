@@ -1,4 +1,4 @@
-// RUN: opt %s | FileCheck %s
+// RUN: mlir-opt %s | FileCheck %s
 
 // CHECK-LABEL: func @test_none_i32
 // CHECK: %{{.+}} = option.none

@@ -1,4 +1,4 @@
-// RUN: opt %s | FileCheck %s
+// RUN: mlir-opt %s | FileCheck %s
 
 // CHECK-LABEL: func @test_unwrap_or_none
 // CHECK: %[[NONE:.*]] = option.none

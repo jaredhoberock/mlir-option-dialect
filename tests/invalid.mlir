@@ -1,4 +1,4 @@
-// RUN: opt %s -split-input-file -verify-diagnostics
+// RUN: mlir-opt %s --split-input-file --verify-diagnostics
 
 // expected-note@+1 {{prior use here}}
 func.func @some_mismatch(%arg0 : i32) {

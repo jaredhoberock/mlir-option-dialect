@@ -1,4 +1,4 @@
-// RUN: opt %s -canonicalize -split-input-file | FileCheck %s
+// RUN: mlir-opt %s --canonicalize --split-input-file | FileCheck %s
 
 // CHECK-LABEL: func @test_unwrap_or_some_fold
 func.func @test_unwrap_or_some_fold(%opt: !option.option<i32>, %default: i32) -> !option.option<i32> {

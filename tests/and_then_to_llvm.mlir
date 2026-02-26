@@ -1,4 +1,4 @@
-// RUN: opt %s -canonicalize --convert-to-llvm | FileCheck %s
+// RUN: mlir-opt %s --canonicalize --convert-to-llvm | FileCheck %s
 
 // CHECK-LABEL: llvm.func @and_then_and_then
 // CHECK-SAME: (%[[ARG0:.*]]: i32, %[[ARG1:.*]]: i32) -> !llvm.struct<(i[[FLAGWIDTH:.*]], i32)>

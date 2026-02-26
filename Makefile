@@ -1,8 +1,4 @@
-LLVM_BIN_PATH = /home/jhoberock/dev/git/llvm-project-19/build/bin
-
-#LLVM_CONFIG = llvm-config-19
-#TBLGEN := mlir-tblgen-19
-#OPT := mlir-opt-19
+LLVM_BIN_PATH = /home/jhoberock/dev/git/llvm-project-20/install/bin
 
 LLVM_CONFIG := $(LLVM_BIN_PATH)/llvm-config
 TBLGEN := $(LLVM_BIN_PATH)/mlir-tblgen
@@ -13,9 +9,7 @@ CXX := clang++
 CXXFLAGS := -g -fPIC `$(LLVM_CONFIG) --cxxflags`
 
 # LLVM/MLIR libraries
-#MLIR_INCLUDE := `$(LLVM_CONFIG) --includedir`
-#MLIR_INCLUDE = /home/jhoberock/dev/git/llvm-project-19/mlir/include
-MLIR_INCLUDE = /usr/lib/llvm-19/include
+MLIR_INCLUDE = /home/jhoberock/dev/git/llvm-project-20/install/include
 
 INCLUDES := -I $(MLIR_INCLUDE)
 
