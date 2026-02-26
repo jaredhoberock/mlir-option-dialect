@@ -1,7 +1,7 @@
-#include "Dialect.hpp"
-#include "Ops.hpp"
+#include "Option.hpp"
+#include "OptionOps.hpp"
 #include "Lowering.hpp"
-#include "Types.hpp"
+#include "OptionTypes.hpp"
 #include <mlir/Conversion/ConvertToLLVM/ToLLVMInterface.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
 #include <mlir/Dialect/Func/IR/FuncOps.h>
@@ -13,7 +13,7 @@
 using namespace mlir;
 using namespace option;
 
-#include "Dialect.cpp.inc"
+#include "Option.cpp.inc"
 
 struct ConvertToLLVMInterface : public mlir::ConvertToLLVMPatternInterface {
   using mlir::ConvertToLLVMPatternInterface::ConvertToLLVMPatternInterface;
@@ -28,7 +28,7 @@ struct ConvertToLLVMInterface : public mlir::ConvertToLLVMPatternInterface {
 void OptionDialect::initialize() {
   addOperations<
 #define GET_OP_LIST
-#include "Ops.cpp.inc"
+#include "OptionOps.cpp.inc"
   >();
 
   registerTypes();

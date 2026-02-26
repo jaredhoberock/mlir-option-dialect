@@ -1,6 +1,6 @@
-#include "option_c.h"
-#include "Dialect.hpp"
-#include "Ops.hpp"
+#include "c_api.h"
+#include "Option.hpp"
+#include "OptionOps.hpp"
 #include <mlir/CAPI/IR.h>
 #include <mlir/CAPI/Pass.h>
 #include <mlir/IR/Builders.h>

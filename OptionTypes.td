@@ -2,7 +2,7 @@
 #define OPTION_TYPES_TD
 
 include "mlir/IR/AttrTypeBase.td"
-include "Dialect.td"
+include "Option.td"
 
 def OptionType : TypeDef<OptionDialect, "Option"> {
   let mnemonic = "option";

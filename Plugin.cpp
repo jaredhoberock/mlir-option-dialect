@@ -1,4 +1,4 @@
-#include "Dialect.hpp"
+#include "Option.hpp"
 #include <mlir/Tools/Plugins/DialectPlugin.h>
 
 static void registerPlugin(mlir::DialectRegistry* registry) {

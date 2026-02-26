@@ -1,5 +1,5 @@
-#include "Dialect.hpp"
-#include "Ops.hpp"
+#include "Option.hpp"
+#include "OptionOps.hpp"
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/Interfaces/FunctionImplementation.h>
 #include <mlir/IR/Builders.h>
@@ -7,7 +7,7 @@
 #include <mlir/IR/OpImplementation.h>
 
 #define GET_OP_CLASSES
-#include "Ops.cpp.inc"
+#include "OptionOps.cpp.inc"
 
 using namespace mlir;
 using namespace option;

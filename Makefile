@@ -20,33 +20,33 @@ MLIR_INCLUDE = /usr/lib/llvm-19/include
 INCLUDES := -I $(MLIR_INCLUDE)
 
 # Dialect library sources (everything except main)
-DIALECT_SOURCES := option_c.cpp Canonicalization.cpp Dialect.cpp Lowering.cpp Ops.cpp Types.cpp
+DIALECT_SOURCES := c_api.cpp Canonicalization.cpp Option.cpp Lowering.cpp OptionOps.cpp OptionTypes.cpp
 DIALECT_OBJECTS := $(DIALECT_SOURCES:.cpp=.o)
 
 # Generated files
-GENERATED := Dialect.hpp.inc Dialect.cpp.inc Ops.hpp.inc Ops.cpp.inc Types.hpp.inc Types.cpp.inc
+GENERATED := Option.hpp.inc Option.cpp.inc OptionOps.hpp.inc OptionOps.cpp.inc OptionTypes.hpp.inc OptionTypes.cpp.inc
 
 .PHONY: all clean
 
 all: liboption_dialect.so
 
 # TableGen rules
-Dialect.hpp.inc: Dialect.td
+Option.hpp.inc: Option.td
 	$(TBLGEN) --gen-dialect-decls $(INCLUDES) $< -o $@
 
-Dialect.cpp.inc: Dialect.td
+Option.cpp.inc: Option.td
 	$(TBLGEN) --gen-dialect-defs $(INCLUDES) $< -o $@
 
-Ops.hpp.inc: Ops.td
+OptionOps.hpp.inc: OptionOps.td
 	$(TBLGEN) --gen-op-decls $(INCLUDES) $< -o $@
 
-Ops.cpp.inc: Ops.td
+OptionOps.cpp.inc: OptionOps.td
 	$(TBLGEN) --gen-op-defs $(INCLUDES) $< -o $@
 
-Types.hpp.inc: Types.td
+OptionTypes.hpp.inc: OptionTypes.td
 	$(TBLGEN) --gen-typedef-decls $(INCLUDES) $< -o $@
 
-Types.cpp.inc: Types.td
+OptionTypes.cpp.inc: OptionTypes.td
 	$(TBLGEN) --gen-typedef-defs $(INCLUDES) $< -o $@
 
 # Object file rules

@@ -1,5 +1,5 @@
-#include "Dialect.hpp"
-#include "Ops.hpp"
+#include "Option.hpp"
+#include "OptionOps.hpp"
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/IR/PatternMatch.h>
 

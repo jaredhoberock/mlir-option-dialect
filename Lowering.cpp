@@ -1,6 +1,6 @@
-#include "Dialect.hpp"
+#include "Option.hpp"
 #include "Lowering.hpp"
-#include "Ops.hpp"
+#include "OptionOps.hpp"
 #include <mlir/Conversion/LLVMCommon/TypeConverter.h>
 #include <mlir/Conversion/SCFToControlFlow/SCFToControlFlow.h>
 #include <mlir/Dialect/LLVMIR/LLVMDialect.h>

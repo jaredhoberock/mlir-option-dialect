@@ -1,4 +1,3 @@
-// Ops.td
 #ifndef OPTION_OPS_TD
 #define OPTION_OPS_TD
 
@@ -7,8 +6,8 @@ include "mlir/Interfaces/SideEffectInterfaces.td"
 include "mlir/IR/BuiltinTypes.td"
 include "mlir/IR/OpAsmInterface.td"
 include "mlir/IR/OpBase.td"
-include "Dialect.td"
-include "Types.td"
+include "Option.td"
+include "OptionTypes.td"
 
 def NoneOp : OptionOp<"none", [Pure]> {
   let summary = "Creates an empty optional value";

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types.hpp"
+#include "OptionTypes.hpp"
 #include <mlir/Bytecode/BytecodeOpInterface.h>
 #include <mlir/Interfaces/CallInterfaces.h>
 #include <mlir/Interfaces/ControlFlowInterfaces.h>
@@ -11,4 +11,4 @@
 #include <mlir/IR/OpDefinition.h>
 
 #define GET_OP_CLASSES
-#include "Ops.hpp.inc"
+#include "OptionOps.hpp.inc"
