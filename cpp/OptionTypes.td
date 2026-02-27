@@ -3,8 +3,11 @@
 
 include "mlir/IR/AttrTypeBase.td"
 include "Option.td"
+include "SumTypeInterface.td"
 
-def OptionType : TypeDef<OptionDialect, "Option"> {
+def OptionType : TypeDef<OptionDialect, "Option", [
+  DeclareTypeInterfaceMethods<SumTypeInterface>
+]> {
   let mnemonic = "option";
   let summary = "A container for at most one value";
   let parameters = (ins

@@ -15,7 +15,8 @@ def OptionDialect : Dialect {
   }];
 
   let dependentDialects = [
-    "mlir::scf::SCFDialect"
+    "mlir::scf::SCFDialect",
+    "mlir::sum::SumDialect"
   ];
 
   let hasCanonicalizer = 1;
