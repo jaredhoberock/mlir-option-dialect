@@ -1,4 +1,4 @@
-LLVM_BIN_PATH = /home/jhoberock/dev/git/llvm-project-20/install/bin
+LLVM_BIN_PATH = $(HOME)/dev/git/llvm-project-20/install/bin
 
 LLVM_CONFIG := $(LLVM_BIN_PATH)/llvm-config
 TBLGEN := $(LLVM_BIN_PATH)/mlir-tblgen
@@ -22,7 +22,7 @@ GENERATED := Option.hpp.inc Option.cpp.inc OptionOps.hpp.inc OptionOps.cpp.inc O
 
 .PHONY: all clean
 
-all: liboption_dialect.so
+all: liboption_dialect.a liboption_dialect.so
 
 # TableGen rules
 Option.hpp.inc: Option.td
@@ -47,6 +47,9 @@ OptionTypes.cpp.inc: OptionTypes.td
 %.o: %.cpp $(GENERATED)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
+liboption_dialect.a: $(DIALECT_OBJECTS)
+	ar rcs $@ $^
+
 PLUGIN_OBJECTS := $(DIALECT_OBJECTS) Plugin.o
 
 liboption_dialect.so: $(PLUGIN_OBJECTS)
@@ -55,7 +58,7 @@ liboption_dialect.so: $(PLUGIN_OBJECTS)
 .PHONY: test
 test: liboption_dialect.so
 	@echo "Running option dialect tests..."
-	./venv/bin/lit tests
+	lit tests
 
 clean:
 	rm -f *.o *.inc *.a *.so
