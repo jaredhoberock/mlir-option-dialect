@@ -15,6 +15,10 @@ def OptionType : TypeDef<OptionDialect, "Option", [
   );
 
   let assemblyFormat = "`<` $innerType `>`";
+
+  let extraClassDeclaration = [{
+    SmallVector<Type, 2> getVariants() const;
+  }];
 }
 
 #endif // OPTION_TYPES_TD

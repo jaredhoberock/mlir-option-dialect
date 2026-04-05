@@ -72,7 +72,7 @@ OpFoldResult AndThenOp::fold(FoldAdaptor adaptor) {
     builder.setInsertionPoint(getOperation());
 
     // Create a new NoneOp with the result type
-    return builder.create<NoneOp>(getLoc(), getResult().getType()).getResult();
+    return NoneOp::create(builder, getLoc(), getResult().getType()).getResult();
   }
 
   return {};
@@ -101,14 +101,14 @@ OpFoldResult IsSomeOp::fold(FoldAdaptor adaptor) {
   if (auto someOp = getInput().getDefiningOp<SomeOp>()) {
     OpBuilder builder(getContext());
     builder.setInsertionPoint(getOperation());
-    return builder.create<arith::ConstantOp>(getLoc(), builder.getBoolAttr(true)).getResult();
+    return arith::ConstantOp::create(builder, getLoc(), builder.getBoolAttr(true)).getResult();
   }
     
   // try to fold none -> false
   if (auto noneOp = getInput().getDefiningOp<NoneOp>()) {
     OpBuilder builder(getContext());
     builder.setInsertionPoint(getOperation());
-    return builder.create<arith::ConstantOp>(getLoc(), builder.getBoolAttr(false)).getResult();
+    return arith::ConstantOp::create(builder, getLoc(), builder.getBoolAttr(false)).getResult();
   }
     
   return {};

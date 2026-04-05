@@ -58,7 +58,7 @@ struct UnwrapOrOpLowering : OpRewritePattern<UnwrapOrOp> {
     Location loc = op.getLoc();
     Type resultTy = op.getResult().getType();
 
-    auto matchOp = rewriter.create<sum::MatchOp>(
+    auto matchOp = sum::MatchOp::create(rewriter, 
         loc, TypeRange{resultTy}, op.getOption(), /*casesCount=*/2u);
 
     // Case 0: None → yield default
@@ -66,7 +66,7 @@ struct UnwrapOrOpLowering : OpRewritePattern<UnwrapOrOp> {
       Region &caseRegion = matchOp.getCases()[0];
       Block *block = rewriter.createBlock(&caseRegion);
       rewriter.setInsertionPointToEnd(block);
-      rewriter.create<sum::YieldOp>(loc, ValueRange{op.getDefaultValue()});
+      sum::YieldOp::create(rewriter, loc, ValueRange{op.getDefaultValue()});
     }
 
     // Case 1: Some(%v) → yield %v
@@ -74,7 +74,7 @@ struct UnwrapOrOpLowering : OpRewritePattern<UnwrapOrOp> {
       Region &caseRegion = matchOp.getCases()[1];
       Block *block = rewriter.createBlock(&caseRegion, {}, {resultTy}, {loc});
       rewriter.setInsertionPointToEnd(block);
-      rewriter.create<sum::YieldOp>(loc, ValueRange{block->getArgument(0)});
+      sum::YieldOp::create(rewriter, loc, ValueRange{block->getArgument(0)});
     }
 
     rewriter.replaceOp(op, matchOp.getResults());
@@ -94,7 +94,7 @@ struct AndThenOpLowering : OpRewritePattern<AndThenOp> {
     Location loc = op.getLoc();
     Type resultTy = op.getResult().getType();
 
-    auto matchOp = rewriter.create<sum::MatchOp>(
+    auto matchOp = sum::MatchOp::create(rewriter, 
         loc, TypeRange{resultTy}, op.getInput(), /*casesCount=*/2u);
 
     // Case 0: None → yield sum.make 0 (none of result type)
@@ -102,8 +102,8 @@ struct AndThenOpLowering : OpRewritePattern<AndThenOp> {
       Region &caseRegion = matchOp.getCases()[0];
       Block *block = rewriter.createBlock(&caseRegion);
       rewriter.setInsertionPointToEnd(block);
-      auto noneVal = rewriter.create<sum::MakeOp>(loc, resultTy, 0);
-      rewriter.create<sum::YieldOp>(loc, ValueRange{noneVal});
+      auto noneVal = sum::MakeOp::create(rewriter, loc, resultTy, 0);
+      sum::YieldOp::create(rewriter, loc, ValueRange{noneVal});
     }
 
     // Case 1: Some(%v) → inline body, replacing option.yield with sum.yield

@@ -12,14 +12,10 @@ using namespace mlir::option;
 #define GET_TYPEDEF_CLASSES
 #include "OptionTypes.cpp.inc"
 
-// SumTypeInterface implementation for OptionType
-// Variant 0 = None (NoneType), Variant 1 = Some(T)
-size_t OptionType::getNumVariants() const { return 2; }
-
-Type OptionType::getVariantType(size_t index) const {
-  if (index == 0)
-    return NoneType::get(getContext());
-  return getInnerType();
+// SumTypeInterface: OptionType has two variants — None and Some(T).
+// The default getNumVariants/getVariantType call getVariants().
+SmallVector<Type, 2> OptionType::getVariants() const {
+  return {NoneType::get(getContext()), getInnerType()};
 }
 
 void OptionDialect::registerTypes() {
