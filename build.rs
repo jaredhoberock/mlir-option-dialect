@@ -29,6 +29,11 @@ fn main() {
     println!("cargo:rustc-link-search=native={}", sum_dialect_dir.display());
     println!("cargo:rustc-link-lib=static=sum_dialect");
 
+    // Add rpath so cargo test can find the MLIR shared library at runtime.
+    let mlir_prefix = env::var("MLIR_SYS_220_PREFIX")
+        .expect("MLIR_SYS_220_PREFIX must be set in the environment");
+    println!("cargo:rustc-link-arg=-Wl,-rpath,{}/lib", mlir_prefix);
+
     // Ensure rebuild if anything in cpp/ changes
     println!("cargo:rerun-if-changed=cpp/");
 }
