@@ -1,4 +1,8 @@
-LLVM_BIN_PATH = $(HOME)/dev/git/llvm-project-22/install/bin
+ifndef MLIR_SYS_220_PREFIX
+$(error MLIR_SYS_220_PREFIX must be set; point it at your LLVM/MLIR 22 install)
+endif
+
+LLVM_BIN_PATH := $(MLIR_SYS_220_PREFIX)/bin
 
 LLVM_CONFIG := $(LLVM_BIN_PATH)/llvm-config
 TBLGEN := $(LLVM_BIN_PATH)/mlir-tblgen
@@ -9,10 +13,10 @@ CXX := clang++
 CXXFLAGS := -g -fPIC `$(LLVM_CONFIG) --cxxflags`
 
 # LLVM/MLIR libraries
-MLIR_INCLUDE = /home/jhoberock/dev/git/llvm-project-22/install/include
+MLIR_INCLUDE := $(MLIR_SYS_220_PREFIX)/include
 
-SUM_DIALECT_INCLUDE = $(HOME)/dev/git/mlir-sum-dialect/cpp
-SUM_DIALECT_LIB = $(HOME)/dev/git/mlir-sum-dialect/cpp
+SUM_DIALECT_INCLUDE = ../../mlir-sum-dialect/cpp
+SUM_DIALECT_LIB = ../../mlir-sum-dialect/cpp
 
 INCLUDES := -I $(MLIR_INCLUDE) -I $(SUM_DIALECT_INCLUDE)
 
