@@ -3,4 +3,4 @@
 #include "mlir/IR/Dialect.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/OpDefinition.h"
-#include "Option.hpp.inc"
+#include <Option.hpp.inc>

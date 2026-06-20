@@ -7,7 +7,7 @@
 #include <mlir/IR/OpImplementation.h>
 
 #define GET_OP_CLASSES
-#include "OptionOps.cpp.inc"
+#include <OptionOps.cpp.inc>
 
 using namespace mlir;
 using namespace mlir::option;

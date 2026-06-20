@@ -2,11 +2,13 @@
 name = "mlir-option-dialect"
 version = "0.1.0"
 edition = "2024"
+links = "option_dialect"
 authors = ["Jared Hoberock <jaredhoberock@gmail.com>"]
 
 [dependencies]
 melior = "0.27"
 mlir-sys = "220.0.1"
+sum_dialect = { path = "../mlir-sum-dialect", package = "mlir-sum-dialect" }
 
 [lib]
 name = "option_dialect"

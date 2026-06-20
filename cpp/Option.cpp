@@ -15,7 +15,7 @@
 using namespace mlir;
 using namespace mlir::option;
 
-#include "Option.cpp.inc"
+#include <Option.cpp.inc>
 
 struct ConvertToLLVMInterface : public mlir::ConvertToLLVMPatternInterface {
   using mlir::ConvertToLLVMPatternInterface::ConvertToLLVMPatternInterface;
@@ -45,7 +45,7 @@ struct ConvertToLLVMInterface : public mlir::ConvertToLLVMPatternInterface {
 void OptionDialect::initialize() {
   addOperations<
 #define GET_OP_LIST
-#include "OptionOps.cpp.inc"
+#include <OptionOps.cpp.inc>
   >();
 
   registerTypes();

@@ -2,70 +2,66 @@ ifndef MLIR_SYS_220_PREFIX
 $(error MLIR_SYS_220_PREFIX must be set; point it at your LLVM/MLIR 22 install)
 endif
 
+BUILD_DIR := build
+SUM_DIALECT_SOURCE_DIR := ../../mlir-sum-dialect/cpp
+SUM_DIALECT_INCLUDE_DIR := ../../mlir-sum-dialect/cpp/build
 LLVM_BIN_PATH := $(MLIR_SYS_220_PREFIX)/bin
-
 LLVM_CONFIG := $(LLVM_BIN_PATH)/llvm-config
 TBLGEN := $(LLVM_BIN_PATH)/mlir-tblgen
-OPT := $(LLVM_BIN_PATH)/mlir-opt
 
-# Compiler flags
 CXX := clang++
-CXXFLAGS := -g -fPIC `$(LLVM_CONFIG) --cxxflags`
+CXXFLAGS := -fPIC $(shell $(LLVM_CONFIG) --cxxflags)
+INCLUDES := -I$(BUILD_DIR) -I. -I$(MLIR_SYS_220_PREFIX)/include -I$(SUM_DIALECT_SOURCE_DIR) -I$(SUM_DIALECT_INCLUDE_DIR)
 
-# LLVM/MLIR libraries
-MLIR_INCLUDE := $(MLIR_SYS_220_PREFIX)/include
-
-SUM_DIALECT_INCLUDE = ../../mlir-sum-dialect/cpp
-SUM_DIALECT_LIB = ../../mlir-sum-dialect/cpp
-
-INCLUDES := -I $(MLIR_INCLUDE) -I $(SUM_DIALECT_INCLUDE)
-
-# Dialect library sources (everything except main)
 DIALECT_SOURCES := c_api.cpp Canonicalization.cpp ConvertToSum.cpp Option.cpp OptionOps.cpp OptionTypes.cpp
-DIALECT_OBJECTS := $(DIALECT_SOURCES:.cpp=.o)
+DIALECT_OBJECTS := $(addprefix $(BUILD_DIR)/,$(DIALECT_SOURCES:.cpp=.o))
+PLUGIN_OBJECTS := $(DIALECT_OBJECTS) $(BUILD_DIR)/Plugin.o
+TD_FILES := $(wildcard *.td) $(SUM_DIALECT_SOURCE_DIR)/SumTypeInterface.td
 
-# Generated files
-GENERATED := Option.hpp.inc Option.cpp.inc OptionOps.hpp.inc OptionOps.cpp.inc OptionTypes.hpp.inc OptionTypes.cpp.inc
+GENERATED := \
+  $(BUILD_DIR)/Option.hpp.inc \
+  $(BUILD_DIR)/Option.cpp.inc \
+  $(BUILD_DIR)/OptionOps.hpp.inc \
+  $(BUILD_DIR)/OptionOps.cpp.inc \
+  $(BUILD_DIR)/OptionTypes.hpp.inc \
+  $(BUILD_DIR)/OptionTypes.cpp.inc
 
-.PHONY: all clean
+.PHONY: all clean test
 
-all: liboption_dialect.a liboption_dialect.so
+all: $(BUILD_DIR)/liboption_dialect.a $(BUILD_DIR)/liboption_dialect.so
 
-# TableGen rules
-Option.hpp.inc: Option.td
+$(BUILD_DIR):
+	mkdir -p $@
+
+$(BUILD_DIR)/Option.hpp.inc: Option.td $(TD_FILES) | $(BUILD_DIR)
 	$(TBLGEN) --gen-dialect-decls $(INCLUDES) $< -o $@
 
-Option.cpp.inc: Option.td
+$(BUILD_DIR)/Option.cpp.inc: Option.td $(TD_FILES) | $(BUILD_DIR)
 	$(TBLGEN) --gen-dialect-defs $(INCLUDES) $< -o $@
 
-OptionOps.hpp.inc: OptionOps.td
+$(BUILD_DIR)/OptionOps.hpp.inc: OptionOps.td $(TD_FILES) | $(BUILD_DIR)
 	$(TBLGEN) --gen-op-decls $(INCLUDES) $< -o $@
 
-OptionOps.cpp.inc: OptionOps.td
+$(BUILD_DIR)/OptionOps.cpp.inc: OptionOps.td $(TD_FILES) | $(BUILD_DIR)
 	$(TBLGEN) --gen-op-defs $(INCLUDES) $< -o $@
 
-OptionTypes.hpp.inc: OptionTypes.td $(SUM_DIALECT_INCLUDE)/SumTypeInterface.td
+$(BUILD_DIR)/OptionTypes.hpp.inc: OptionTypes.td $(TD_FILES) | $(BUILD_DIR)
 	$(TBLGEN) --gen-typedef-decls $(INCLUDES) $< -o $@
 
-OptionTypes.cpp.inc: OptionTypes.td $(SUM_DIALECT_INCLUDE)/SumTypeInterface.td
+$(BUILD_DIR)/OptionTypes.cpp.inc: OptionTypes.td $(TD_FILES) | $(BUILD_DIR)
 	$(TBLGEN) --gen-typedef-defs $(INCLUDES) $< -o $@
 
-# Object file rules
-%.o: %.cpp $(GENERATED)
+$(BUILD_DIR)/%.o: %.cpp $(GENERATED) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-liboption_dialect.a: $(DIALECT_OBJECTS)
+$(BUILD_DIR)/liboption_dialect.a: $(DIALECT_OBJECTS)
 	ar rcs $@ $^
 
-PLUGIN_OBJECTS := $(DIALECT_OBJECTS) Plugin.o
+$(BUILD_DIR)/liboption_dialect.so: $(PLUGIN_OBJECTS)
+	$(CXX) -shared $^ -o $@
 
-liboption_dialect.so: $(PLUGIN_OBJECTS) $(SUM_DIALECT_LIB)/libsum_dialect.a
-	$(CXX) -shared $(PLUGIN_OBJECTS) $(SUM_DIALECT_LIB)/libsum_dialect.a -o $@
-
-.PHONY: test
-test: liboption_dialect.so
-	@echo "Running option dialect tests..."
-	lit tests
+test: $(BUILD_DIR)/liboption_dialect.so
+	OPTION_DIALECT_PLUGIN=$(CURDIR)/$(BUILD_DIR)/liboption_dialect.so lit tests
 
 clean:
-	rm -f *.o *.inc *.a *.so
+	rm -rf $(BUILD_DIR)

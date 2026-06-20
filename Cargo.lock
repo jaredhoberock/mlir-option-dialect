@@ -224,6 +224,15 @@ name = "mlir-option-dialect"
 version = "0.1.0"
 dependencies = [
  "melior",
+ "mlir-sum-dialect",
+ "mlir-sys",
+]
+
+[[package]]
+name = "mlir-sum-dialect"
+version = "0.1.0"
+dependencies = [
+ "melior",
  "mlir-sys",
 ]
 

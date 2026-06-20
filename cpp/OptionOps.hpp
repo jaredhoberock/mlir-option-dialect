@@ -11,4 +11,4 @@
 #include <mlir/IR/OpDefinition.h>
 
 #define GET_OP_CLASSES
-#include "OptionOps.hpp.inc"
+#include <OptionOps.hpp.inc>
